@@ -51,6 +51,17 @@ int main() {
 ... and example output
 
 ```
+# assuing the example from above is in `example.cxx`
+pest $ clang++10 -I. -std=c++17 example.cxx -o ex
+pest $ ./ex
+[suite <pest self test> | true equal_to true]
+[suite <pest self test> | vector<> equal_to initializer_list<>]
+[suite <pest self test> | summary]
+  total assertions failed = 0
+  total assertions pass = 2
+  total assertions skipped = 0
+  total uncaught exceptions = 0
+  total tests = 2
 ```
 
 ## development & packaging
