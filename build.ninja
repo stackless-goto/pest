@@ -2,9 +2,6 @@
 
 fmt = clang-format10
 
- darcs convert export --read-marks darcs.marks --write-marks darcs.marks \
-  | ( cd "$mirror" && git fast-import --import-marks=git.marks --export-marks=git.marks )
-
 popt = "-DNDEBUG"
 copt = "-Ofast -Wall -Wextra -Weverything -pedantic -ffast-math -flto -fno-rtti" 
 lopt = "-flto -stdlib=libc++ -fno-rtti"
@@ -22,13 +19,13 @@ rule clang10
     config.cxx.coptions=$copt $
     config.cxx.loptions=$lopt
 
-rule darcs_export
+rule mirror
   command = darcs convert export --read-marks darcs.marks --write-marks darcs.marks $
     | git fast-import --import-marks=git.marks --export-marks=git.marks
 
 build help : help
 build format : format ./pest ./tests/unit
 build clang10 : clang10
-build export : darcs_export
+build mirror : mirror
 
 default help

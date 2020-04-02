@@ -2,8 +2,8 @@
 
 antibloat & turbo simplistic single header c++ unit testing thingy. 
 
-i implemented this because i wanted a hackable solution not causing
-excessive compile times once you have more than one assertion.
+implemented this because a hackable solution for unit testing was needed not
+causing excessive compile times once you have more than one assertion.
 
 - reduced sloc
 - easy to understand and hack
@@ -16,7 +16,7 @@ excessive compile times once you have more than one assertion.
 
 - c++17
 - `__builtin_FILE`, `__builtin_LINE` and `__builtin_FUNCTION` ( gcc and clang )
-  - for the custom `source_location` impl :/
+    - for the custom `source_location` impl :/
 
 ## examples
 
@@ -25,9 +25,9 @@ excessive compile times once you have more than one assertion.
 
 ## references
 
-- lest ( small-ish, compile-time and binary bloat ) <>
-- mettle ( big-ish, compile-time bloat ) <>
+- lest ( small-ish, compile-time and binary bloat ) <https://github.com/martinmoene/lest>
+- mettle ( big-ish, compile-time bloat ) <https://github.com/jimporter/mettle>
 
 ## support and blame-game
 
-al3x < mb [at] 64k.by >
+magenbluten < mb [at] 64k.by >
