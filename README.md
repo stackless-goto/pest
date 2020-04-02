@@ -32,4 +32,4 @@ causing excessive compile times once you have more than one assertion.
 
 ## support and blame-game
 
-magenbluten < mb [at] 64k.by >
+magenbluten < mb [at] 64k.by > | <https://64k.by>
