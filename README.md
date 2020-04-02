@@ -25,8 +25,10 @@ causing excessive compile times once you have more than one assertion.
 
 ## references
 
-- lest ( small-ish, compile-time and binary bloat ) <https://github.com/martinmoene/lest>
-- mettle ( big-ish, compile-time bloat ) <https://github.com/jimporter/mettle>
+- lest ( small-ish, compile-time and binary bloat )
+    - <https://github.com/martinmoene/lest>
+- mettle ( big-ish, compile-time bloat )
+    - <https://github.com/jimporter/mettle>
 
 ## support and blame-game
 
