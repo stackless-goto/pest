@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: Unlicense
+
+fmt = clang-format10
+
+ darcs convert export --read-marks darcs.marks --write-marks darcs.marks \
+  | ( cd "$mirror" && git fast-import --import-marks=git.marks --export-marks=git.marks )
+
+popt = "-DNDEBUG"
+copt = "-Ofast -Wall -Wextra -Weverything -pedantic -ffast-math -flto -fno-rtti" 
+lopt = "-flto -stdlib=libc++ -fno-rtti"
+
+# yolo
+rule format
+  command = find $in \( -name '*.hxx' -or -name '*.cxx' \) -exec $fmt --verbose -style=file -i '{}' +
+
+rule help
+  command = echo "see build.ninja ( ninja -t targets )"
+
+rule clang10
+  command = bdep init -C @clang10 cc config.cxx=clang++10 $
+    config.cxx.poptions=$popt $
+    config.cxx.coptions=$copt $
+    config.cxx.loptions=$lopt
+
+rule darcs_export
+  command = darcs convert export --read-marks darcs.marks --write-marks darcs.marks $
+    | git fast-import --import-marks=git.marks --export-marks=git.marks
+
+build help : help
+build format : format ./pest ./tests/unit
+build clang10 : clang10
+build export : darcs_export
+
+default help

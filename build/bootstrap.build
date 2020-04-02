@@ -1,0 +1,6 @@
+project = pest
+
+using config
+using test
+using install
+using dist
