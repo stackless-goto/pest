@@ -27,7 +27,7 @@ source file ...
 
 namespace {
 
-suite basic( "pest self test", []( auto& test ) {
+emptyspace::pest::suite basic( "pest self test", []( auto& test ) {
   using namespace emptyspace::pest;
 
   test( "true equal_to true", []( auto& expect ) {
