@@ -1,4 +1,4 @@
-# pest @ <https://hub.darcs.net/magenbluten/pest>
+# pest
 
 antibloat & turbo simplistic single header c++ unit testing thingy. 
 
@@ -20,7 +20,14 @@ causing excessive compile times once you have more than one assertion.
 
 ## examples
 
+source file ...
+
 ```cpp
+```
+
+... and example output
+
+```
 ```
 
 ## development & packaging
