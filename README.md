@@ -1,4 +1,4 @@
-# pest
+# pest @ <https://hub.darcs.net/magenbluten/pest>
 
 antibloat & turbo simplistic single header c++ unit testing thingy. 
 
@@ -23,12 +23,31 @@ causing excessive compile times once you have more than one assertion.
 ```cpp
 ```
 
+## development & packaging
+
+[build2](https://build2.org) is used for life cycle management.
+
+declaring `pest` as dependency in a `build2` project:
+
+```
+```
+
 ## references
 
 - lest ( small-ish, compile-time and binary bloat )
     - <https://github.com/martinmoene/lest>
 - mettle ( big-ish, compile-time bloat )
     - <https://github.com/jimporter/mettle>
+
+## mirrors
+
+- main @ <https://hub.darcs.net/magenbluten/pest>
+- m1 @ <https://github.com/stackless-goto/pest>
+- m2 @ <https://sr.ht/~magenbluten/pest>
+
+## licencse
+
+choose between `UNLICENSE` or `LICENSE` freely.
 
 ## support and blame-game
 
