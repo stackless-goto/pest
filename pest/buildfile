@@ -1,7 +1,7 @@
 int_libs = # Interface dependencies.
 imp_libs = # Implementation dependencies.
 
-lib{pest}: {hxx ixx txx}{** -version} $imp_libs $int_libs
+lib{pest}: {hxx ixx txx}{**} $imp_libs $int_libs
 
 cxx.poptions =+ "-I$out_root" "-I$src_root"
 
