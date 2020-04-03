@@ -68,6 +68,17 @@ pest $ ./ex
 
 [build2](https://build2.org) is used for life cycle management.
 
+cloning the repository and running the test driver `test/unit/driver.cxx`
+
+```
+$ darcs clone --lazy https://hub.darcs.net/magenbluten/pest
+# or
+$ git clone https://git.sr.ht/~magenbluten/pest
+$ bdep init -C @clang10 cc config.cxx=clang++10
+$ bdep test
+test tests/unit/testscript{testscript}@../pest-clang10/pest/tests/unit/ ../pest-clang10/pest/tests/unit/exe{driver}
+```
+
 declaring `pest` as dependency in a `build2` project:
 
 ```
