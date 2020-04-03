@@ -34,7 +34,11 @@ struct source_location {
 };
 
 inline std::ostream& operator<<( std::ostream& os, source_location const where ) noexcept {
-  os << where._file << ":" << where._line;
+  auto const s = std::string_view{ where._file };
+  auto const n = s.rfind( '/' );
+
+  os << ( n == std::string_view::npos ? s : std::string_view{ where._file + n + 1 } ) << ":"
+     << where._line;
   return os;
 }
 

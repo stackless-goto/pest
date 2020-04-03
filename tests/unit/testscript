@@ -1,0 +1,16 @@
+: minimal-self-test
+$* 2>>EOO == 0
+[suite <pest test suite> | std::map<>: insert and find key]
+[suite <pest test suite> | std::vector<>: times7 failing]
+  failed = driver.cxx:31
+  assertion = equal_to
+  expected = { 3, 4, 7, }
+  actual = { 21, 28, 49, }
+[suite <pest test suite> | std::vector<>: times7 succeeding]
+[suite <pest test suite> | summary]
+  total assertions failed = 1
+  total assertions pass = 4
+  total assertions skipped = 1
+  total uncaught exceptions = 0
+  total tests = 3
+EOO

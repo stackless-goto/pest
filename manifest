@@ -1,11 +1,10 @@
 : 1
 name: pest
 version: 0.1.0-a.0.z
-summary: pest C++ library
-license: proprietary
+summary: pest simplistic c++17 unit testing
+license: UNLICENSE
 description-file: README.md
-url: https://example.org/pest
+url: https://hub.darcs.net/magenbluten/pest
 email: mb@64k.by
 depends: * build2 >= 0.12.0
 depends: * bpkg >= 0.12.0
-#depends: libhello ^1.0.0

@@ -51,7 +51,7 @@ int main() {
 ... and example output
 
 ```
-# assuing the example from above is in `example.cxx`
+# assuming the example from above is in `example.cxx`
 pest $ clang++10 -I. -std=c++17 example.cxx -o ex
 pest $ ./ex
 [suite <pest self test> | true equal_to true]

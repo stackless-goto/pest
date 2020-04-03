@@ -1,10 +1,25 @@
-# SPDX-License-Identifier: Unlicense
+# SPDX-License-Identifier: UNLICENSE
 
 fmt = clang-format10
 
-popt = "-DNDEBUG"
-copt = "-Ofast -Wall -Wextra -Weverything -pedantic -ffast-math -flto -fno-rtti" 
-lopt = "-flto -stdlib=libc++ -fno-rtti"
+popt = -DNDEBUG
+lopt = -flto -fno-rtti
+copt = -stdlib=libc++ -Ofast -ffast-math -flto -fno-rtti -g3 $
+  -Wall -Wextra -Weverything -pedantic $
+  -Wno-c99-designator $
+  -Wno-gnu-string-literal-operator-template $
+  -Wno-c++98-compat $
+  -Wno-c++98-compat-pedantic $
+  -Wno-gnu-label-as-value $
+  -Wno-padded $
+  -Wno-weak-vtables $
+  -Wno-global-constructors $
+  -Wno-exit-time-destructors $
+  -Wno-gnu-case-range $
+  -Wno-gnu-anonymous-struct $
+  -Wno-nested-anon-types $
+  -Wno-ctad-maybe-unsupported $
+  -Wno-comma $
 
 # yolo
 rule format
@@ -15,9 +30,9 @@ rule help
 
 rule clang10
   command = bdep init -C @clang10 cc config.cxx=clang++10 $
-    config.cxx.poptions=$popt $
-    config.cxx.coptions=$copt $
-    config.cxx.loptions=$lopt
+    config.cxx.poptions="$popt" $
+    config.cxx.coptions="$copt" $
+    config.cxx.loptions="$lopt"
 
 rule mirror
   command = darcs convert export --read-marks darcs.marks --write-marks darcs.marks $

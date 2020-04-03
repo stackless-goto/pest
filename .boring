@@ -121,3 +121,4 @@
 \_build$
 \.ninja_log$
 \.ninja_deps$
+\.bdep$
