@@ -9,4 +9,3 @@ email: mb@64k.by
 depends: * build2 >= 0.12.0
 depends: * bpkg >= 0.12.0
 requires: c++17
-requires: gcc | clang_10+
