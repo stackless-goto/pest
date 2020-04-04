@@ -29,7 +29,7 @@ emptyspace::pest::suite basic( "pest test suite", []( auto& test ) {
   test( "std::vector<>: times7 failing", []( auto& expect ) {
     auto const inputs = std::vector<int>{ 3, 4, 7 };
     // can not include the failing test because output depends
-    // on the build path ( using __FILE__ or __builtin_FILE etc ) 
+    // on the build path ( using __FILE__ or __builtin_FILE etc )
     // this means we are facing a non reproducible build :/
     // expect( times7( inputs ), equal_to( { 3, 4, 7 } ) );
 
