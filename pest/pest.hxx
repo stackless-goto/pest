@@ -26,8 +26,9 @@ struct source_location {
   constexpr source_location( char const* file, char const* func, int const line )
     : _file{ file }, _func{ func }, _line{ line } {}
 
-#if __has_builtin( __builtin_FILE ) && __has_builtin( __builtin_FUNCTION ) &&                         \
-    __has_builtin( __builtin_LINE )
+#if defined( __has_builtin ) && __has_builtin( __builtin_FILE ) &&                                    \
+        __has_builtin( __builtin_FUNCTION ) && __has_builtin( __builtin_LINE ) ||                     \
+    ( __GNUC__ >= 7 )
   static inline source_location current(
       char const* file = __builtin_FILE(),
       char const* func = __builtin_FUNCTION(),
