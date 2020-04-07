@@ -1,6 +1,6 @@
 # pest
 
-antibloat & turbo simplistic single header c++ unit testing thingy. 
+antibloat & turbo simplistic single header cxx unit testing thingy.
 
 implemented this because a hackable solution for unit testing was needed not
 causing excessive compile times once you have more than one assertion.
@@ -66,14 +66,13 @@ pest $ ./ex
 
 ## development & packaging
 
-[build2](https://build2.org) is used for life cycle management.
+[build2](https://build2.org) is used for life cycle management. for using without `build2`
+just drop the header into your project.
 
 cloning the repository and running the test driver `test/unit/driver.cxx`
 
 ```
-$ darcs clone --lazy https://hub.darcs.net/magenbluten/pest
-# or
-$ git clone https://git.sr.ht/~magenbluten/pest
+$ git clone https://github.com/stackless-goto/pest
 $ cd pest
 $ bdep init -C @clang10 cc config.cxx=clang++10
 $ bdep test
@@ -89,16 +88,15 @@ declaring `pest` as dependency in a `build2` project:
 
 similar libraries. might be better suited ...
 
-- [lest](https://github.com/martinmoene/lest) ( small-ish, compile-time and binary bloat )
-- [mettle](https://github.com/jimporter/mettle) ( big-ish, compile-time bloat )
+- [~martinmoene/lest](https://github.com/martinmoene/lest) ( small-ish, compile-time and binary bloat )
+- [~jimporter/mettle](https://github.com/jimporter/mettle) ( big-ish, compile-time bloat )
 
 ## mirrors
 
-- main @ <https://hub.darcs.net/magenbluten/pest>
-- m1 @ <https://github.com/stackless-goto/pest>
-- m2 @ <https://sr.ht/~magenbluten/pest>
+- darcs @ <https://hub.darcs.net/magenbluten/pest>
+- git @ <https://github.com/stackless-goto/pest>
 
-## licencse
+## license
 
 choose between `UNLICENSE` or `LICENSE` freely.
 
