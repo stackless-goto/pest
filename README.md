@@ -1,4 +1,5 @@
-# pest
+
+# pest ![plague-doc](https://64k.by/assets/pest.png)
 
 antibloat & turbo simplistic single header cxx unit testing thingy.
 
