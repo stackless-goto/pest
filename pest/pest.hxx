@@ -54,7 +54,7 @@ inline std::ostream& operator<<( std::ostream& os, source_location const where )
 
 template <typename T>
 struct equal_to {
-  constexpr explicit equal_to( T&& v ) noexcept : _expr{ std::forward<T>( v ) } {}
+  constexpr explicit equal_to( T&& v ) noexcept : _expr( std::forward<T>( v ) ) {}
   T _expr;
 };
 
