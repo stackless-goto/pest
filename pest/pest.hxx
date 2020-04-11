@@ -16,8 +16,10 @@
 #include <utility>
 #include <vector>
 
-namespace emptyspace::pest {
-
+#if __has_include( <source_location> )
+#  include <source_location>
+#else
+namespace std {
 struct source_location {
   char const* const _file;
   char const* const _func;
@@ -26,24 +28,34 @@ struct source_location {
   constexpr source_location( char const* file, char const* func, int const line )
     : _file{ file }, _func{ func }, _line{ line } {}
 
-#if defined( __has_builtin ) && __has_builtin( __builtin_FILE ) &&                                    \
-        __has_builtin( __builtin_FUNCTION ) && __has_builtin( __builtin_LINE ) ||                     \
-    ( __GNUC__ >= 7 )
+#  if defined( __has_builtin )
+#    if __has_builtin( __builtin_FILE ) && __has_builtin( __builtin_FUNCTION ) &&                     \
+        __has_builtin( __builtin_LINE )
   static inline source_location current(
       char const* file = __builtin_FILE(),
       char const* func = __builtin_FUNCTION(),
       int const line = __builtin_LINE() ) {
     return { file, func, line };
   }
-#else
+#    else
   static inline source_location current(
       char const* file = "unsupported", char const* func = "unsupported", int const line = 0 ) {
     return { file, func, line };
   }
-#endif
+#    endif
+#  else
+  static inline source_location current(
+      char const* file = "unsupported", char const* func = "unsupported", int const line = 0 ) {
+    return { file, func, line };
+  }
+#  endif
 };
+} // namespace std
+#endif
 
-inline std::ostream& operator<<( std::ostream& os, source_location const where ) noexcept {
+namespace emptyspace::pest {
+
+inline std::ostream& operator<<( std::ostream& os, std::source_location const where ) noexcept {
   auto const s = std::string_view{ where._file };
   auto const n = s.rfind( '/' );
 
@@ -108,7 +120,7 @@ struct test_state {
   void expect(
       T const& lhs,
       equal_to<std::initializer_list<U>> const& rhs,
-      source_location const where = source_location::current() ) noexcept {
+      std::source_location const where = std::source_location::current() ) noexcept {
     // we stop after the first failure, but still count
     // the number of assertions
     if( _failed > 0 ) {
@@ -143,7 +155,7 @@ struct test_state {
   void expect(
       T const& lhs,
       equal_to<U> const& rhs,
-      source_location const where = source_location::current() ) noexcept {
+      std::source_location const where = std::source_location::current() ) noexcept {
     // we stop after the first failure, but still count
     // the number of assertions
     if( _failed > 0 ) {
@@ -171,7 +183,9 @@ struct test_state {
 
   template <typename T, typename U>
   inline void operator()(
-      T const& lhs, U const& rhs, source_location const where = source_location::current() ) noexcept {
+      T const& lhs,
+      U const& rhs,
+      std::source_location const where = std::source_location::current() ) noexcept {
     expect( lhs, rhs, where );
   }
 };
