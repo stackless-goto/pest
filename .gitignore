@@ -1,4 +1,12 @@
 .bdep/
+_darcs/
+.ninja_deps
+.ninja_log
+build/bootstrap/
+tests/build/bootstrap
+tests/unit/driver
+darcs.marks
+git.marks
 
 # Local default options files.
 #
