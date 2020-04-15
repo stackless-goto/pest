@@ -103,4 +103,4 @@ choose between `UNLICENSE` or `LICENSE` freely.
 
 ## support and blame-game
 
-magenbluten < mb [at] 64k.by > | <https://64k.by>
+magenbluten < mb [at] 64k.by > :: <https://64k.by>
