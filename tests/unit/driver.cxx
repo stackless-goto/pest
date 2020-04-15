@@ -1,6 +1,8 @@
+#include <exception>
 #include <pest/pest.hxx>
 
 #include <map>
+#include <stdexcept>
 #include <vector>
 
 namespace {
@@ -35,11 +37,16 @@ emptyspace::pest::suite basic( "pest test suite", []( auto& test ) {
 
     // execution would continue; but the `equal_to` comparision
     // would not be executed
-    expect( true, equal_to( true ) );
+    expect( times7( inputs ), not_equal_to( { 3, 4, 7 } ) );
   } );
+
   test( "std::vector<>: times7 succeeding", []( auto& expect ) {
     auto const inputs = std::vector<int>{ 3, 4, 7 };
     expect( times7( inputs ), equal_to( { 21, 28, 49 } ) );
+  } );
+
+  test( "throws out-of-range", []( auto& expect ) {
+    expect( throws<std::out_of_range>( [&]() { throw std::out_of_range(""); } ) );
   } );
 } );
 

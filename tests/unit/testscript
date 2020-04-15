@@ -3,10 +3,11 @@ $* 2>>EOO == 0
 [suite <pest test suite> | std::map<>: insert and find key]
 [suite <pest test suite> | std::vector<>: times7 failing]
 [suite <pest test suite> | std::vector<>: times7 succeeding]
+[suite <pest test suite> | throws out-of-range]
 [suite <pest test suite> | summary]
   total assertions failed = 0
-  total assertions pass = 5
+  total assertions pass = 6
   total assertions skipped = 0
   total uncaught exceptions = 0
-  total tests = 3
+  total tests = 4
 EOO

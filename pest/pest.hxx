@@ -66,8 +66,8 @@ inline std::ostream& operator<<( std::ostream& os, std::source_location const wh
 
 template <typename T>
 struct equal_to {
-  constexpr explicit equal_to( T&& v ) noexcept : _expr( std::forward<T>( v ) ) {}
   T _expr;
+  constexpr explicit equal_to( T&& v ) noexcept : _expr( std::forward<T>( v ) ) {}
 };
 
 template <typename T>
@@ -76,9 +76,31 @@ equal_to( T && ) -> equal_to<T>;
 template <typename T>
 equal_to( std::initializer_list<T> ) -> equal_to<std::initializer_list<T>>;
 
+template <typename T>
+struct not_equal_to {
+  T _expr;
+  constexpr explicit not_equal_to( T&& v ) noexcept : _expr( std::forward<T>( v ) ) {}
+};
+
+template <typename T>
+not_equal_to( T && ) -> not_equal_to<T>;
+
+template <typename T>
+not_equal_to( std::initializer_list<T> ) -> not_equal_to<std::initializer_list<T>>;
+
+template <typename T, typename U>
+bool operator!=( T const& lhs, not_equal_to<U> const& rhs ) {
+  return lhs != rhs._expr;
+}
+
+inline bool operator==( double const lhs, equal_to<double> const& rhs ) noexcept {
+  return std::abs( rhs._expr - lhs ) <=
+      std::abs( std::min( rhs._expr, lhs ) ) * std::numeric_limits<double>::epsilon();
+}
+
 template <typename T, typename U>
 bool operator==( T const& lhs, equal_to<U> const& rhs ) {
-  return ( lhs == rhs._expr );
+  return lhs == rhs._expr;
 }
 
 template <typename T, typename U>
@@ -90,12 +112,22 @@ bool operator==( T const& lhs, equal_to<std::initializer_list<U>> const& rhs ) n
       std::end( rhs._expr ) );
 }
 
-inline bool operator==( double const lhs, equal_to<double> const& rhs ) noexcept {
-  return std::abs( rhs._expr - lhs ) <=
-      std::abs( std::min( rhs._expr, lhs ) ) * std::numeric_limits<double>::epsilon();
+template <typename T, typename U>
+bool operator!=( T const& lhs, not_equal_to<std::initializer_list<U>> const& rhs ) noexcept {
+  return not std::equal(
+      std::begin( lhs ),
+      std::end( lhs ),
+      std::begin( rhs._expr ),
+      std::end( rhs._expr ) );
 }
 
-template <typename T, std::enable_if_t<!std::is_enum<T>::value, int> = 0>
+inline bool operator!=( double const lhs, not_equal_to<double> const& rhs ) noexcept {
+  return not (
+      std::abs( rhs._expr - lhs ) <=
+      std::abs( std::min( rhs._expr, lhs ) ) * std::numeric_limits<double>::epsilon() );
+}
+
+template <typename T, std::enable_if_t<! std::is_enum<T>::value, int> = 0>
 std::ostream& print_to( std::ostream& os, T const& t ) {
   os << t;
   return os;
@@ -108,6 +140,20 @@ std::ostream& print_to( std::ostream& os, T const t ) {
   return os;
 }
 
+enum class result_throws { EXPECTED, UNEXPECTED, NOTHROW };
+
+template <typename E, typename F>
+result_throws throws( F const f ) {
+  try {
+    f();
+    return result_throws::NOTHROW;
+  } catch( E const& ) { //
+    return result_throws::EXPECTED;
+  } catch( ... ) { //
+    return result_throws::UNEXPECTED;
+  }
+}
+
 struct test_state {
   std::ostream& os;
   unsigned _failed{ 0 };
@@ -116,6 +162,29 @@ struct test_state {
   unsigned _tests{ 0 };
   unsigned _skipped{ 0 };
 
+  void expect(
+      result_throws const rc,
+      std::source_location const where = std::source_location::current() ) noexcept {
+    if( _failed > 0 ) {
+      _skipped++;
+      return;
+    }
+    switch( rc ) {
+      case result_throws::NOTHROW:
+        os << "  failed = " << where << std::endl;
+        os << "  expected = throws" << std::endl;
+        os << "  actual = did not throw" << std::endl;
+        _failed++;
+        break;
+      case result_throws::UNEXPECTED:
+        os << "  failed = " << where << std::endl;
+        os << "  expected = throws known exception" << std::endl;
+        os << "  actual = threw unexpected exception" << std::endl;
+        _failed++;
+        break;
+      case result_throws::EXPECTED: _pass++; break;
+    }
+  }
   template <typename T, typename U>
   void expect(
       T const& lhs,
@@ -182,11 +251,82 @@ struct test_state {
   }
 
   template <typename T, typename U>
+  void expect(
+      T const& lhs,
+      not_equal_to<std::initializer_list<U>> const& rhs,
+      std::source_location const where = std::source_location::current() ) noexcept {
+    // we stop after the first failure, but still count
+    // the number of assertions
+    if( _failed > 0 ) {
+      _skipped++;
+      return;
+    }
+    try {
+      if( lhs != rhs ) {
+        _pass++;
+      } else {
+        os << "  failed = " << where << std::endl;
+        os << "  assertion = not_equal_to" << std::endl;
+        os << "  expected = { ";
+        // TODO: we should apply `print_to` to each value
+        std::ostream_iterator<U> it_r( os, ", " );
+        std::copy( std::begin( rhs._expr ), std::end( rhs._expr ), it_r );
+        os << "}" << std::endl;
+        os << "  actual = { ";
+        std::ostream_iterator<typename T::value_type> it_l( os, ", " );
+        std::copy( std::begin( lhs ), std::end( lhs ), it_l );
+        os << "}" << std::endl;
+        _failed++;
+      }
+    } catch( ... ) {
+      os << "  failed = threw exception" << std::endl;
+      _failed++;
+      _uncaught_exns++;
+    }
+  }
+
+  template <typename T, typename U>
+  void expect(
+      T const& lhs,
+      not_equal_to<U> const& rhs,
+      std::source_location const where = std::source_location::current() ) noexcept {
+    // we stop after the first failure, but still count
+    // the number of assertions
+    if( _failed > 0 ) {
+      _skipped++;
+      return;
+    }
+    try {
+      if( lhs != rhs ) {
+        _pass++;
+      } else {
+        os << "  failed = " << where << std::endl;
+        os << "  assertion = not_equal_to" << std::endl;
+        os << "  expected = ";
+        print_to( os, rhs._expr ) << std::endl;
+        os << "  actual = ";
+        print_to( os, lhs ) << std::endl;
+        _failed++;
+      }
+    } catch( ... ) {
+      os << "  failed = threw exception" << std::endl;
+      _failed++;
+      _uncaught_exns++;
+    }
+  }
+
+  template <typename T, typename U>
   inline void operator()(
       T const& lhs,
       U const& rhs,
       std::source_location const where = std::source_location::current() ) noexcept {
     expect( lhs, rhs, where );
+  }
+
+  inline void operator()(
+      result_throws const rc,
+      std::source_location const where = std::source_location::current() ) noexcept {
+    expect( rc, where );
   }
 };
 
