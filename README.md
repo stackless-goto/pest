@@ -1,7 +1,7 @@
 
 # pest ![plague-doc](https://64k.by/assets/pest.png)
 
-antibloat & turbo simplistic single header cxx unit testing thingy.
+antibloat & turbo simplistic header only cxx unit testing & benchmarking thingy.
 
 implemented this because a hackable solution for unit testing was needed not
 causing excessive compile times once you have more than one assertion.
@@ -10,8 +10,12 @@ causing excessive compile times once you have more than one assertion.
 - easy to understand and hack
 - does not suffer from extraordinarily compile time bloat
 - does not suffer from extraordinarily compiled binary bloat
-- theoretically, the output can be read back using <inihxx>
 - macro free
+
+`pest` includes a `xoshiro` prng and a `zipfian distribution` helper class:
+
+- `#include <pest/xoshiro.hcxx>`
+- `#include <pest/zipfian-distribution.hxx`>
 
 ## requires
 
@@ -20,6 +24,8 @@ causing excessive compile times once you have more than one assertion.
     - for the custom `source_location` impl :/
 
 ## examples
+
+### unit tests ( `using emptyspace::pest` )
 
 source file ...
 
@@ -65,6 +71,42 @@ pest $ ./ex
   total tests = 2
 ```
 
+### benchmarks ( `using emptyspace::pnch` )
+
+suppose we want to benchmark the `strftime` function ...
+
+```cpp
+#include <pest/pnch.hxx>
+#include <ctime>
+
+int main() {
+  emptyspace::pnch::config cfg;
+  std::size_t n = 0;
+  char buffer[128];
+  cfg.run(
+         "strftime",
+         [&]() {
+           auto stamp1 = std::chrono::system_clock::now();
+           auto epoch = std::chrono::system_clock::to_time_t( stamp1 );
+           auto gmtime = std::gmtime( &epoch );
+           n += std::strftime( buffer, 64, "%Y.%m.%d:%T.", gmtime );
+         } )
+      .touch( n )
+      .report_to( std::cerr );
+      
+  return n > 0;
+}
+```
+
+... could lead to the following output
+
+```
+[benchmark | strftime]
+  stats/total = 2.27702e+09
+  stats/average = 990.007
+  stats/stddev = 7.18419
+```
+
 ## development & packaging
 
 [build2](https://build2.org) is used for life cycle management. for using without `build2`
@@ -99,7 +141,8 @@ similar libraries. might be better suited ...
 
 ## license
 
-choose between `UNLICENSE` or `LICENSE` freely.
+choose between `UNLICENSE` or `LICENSE` freely. `zipfian` and `xoshiro` are derived work and
+therefore -- as indicated in the corresponding source files -- `MIT` licensed.
 
 ## support and blame-game
 

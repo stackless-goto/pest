@@ -1,7 +1,12 @@
-#include <exception>
-#include <pest/pest.hxx>
+// SPDX-License-Identifier: UNLICENSE
 
+#include <pest/pest.hxx>
+#include <pest/pnch.hxx>
+#include <pest/xoshiro.hxx>
+
+#include <exception>
 #include <map>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -18,6 +23,8 @@ std::vector<int> times7( std::vector<int> const& numbers ) noexcept {
 
 emptyspace::pest::suite basic( "pest test suite", []( auto& test ) {
   using namespace emptyspace::pest;
+  using namespace emptyspace::xoshiro;
+  using namespace emptyspace::pnch;
 
   test( "std::map<>: insert and find key", []( auto& expect ) {
     std::map<std::uint32_t, std::uint32_t> m;
@@ -46,7 +53,28 @@ emptyspace::pest::suite basic( "pest test suite", []( auto& test ) {
   } );
 
   test( "throws out-of-range", []( auto& expect ) {
-    expect( throws<std::out_of_range>( [&]() { throw std::out_of_range(""); } ) );
+    expect( throws<std::out_of_range>( [&]() { throw std::out_of_range( "" ); } ) );
+  } );
+
+  test( "xoshiro with boring seed", []( auto& expect ) {
+    xoshiro128starstar32 xo{ 0x2342 };
+    expect( xo(), equal_to( 1566649558u ) );
+  } );
+
+  test( "benchmark nothing", []( auto& expect ) {
+    emptyspace::pnch::config cfg;
+    int x = 0;
+    std::ostringstream os;
+    cfg.i( 2 ).o( 3 ).run( "nothings", [&]() { x += 1; } ).touch( x ).report_to( os );
+    expect( x, equal_to( 2 * 3 ) );
+  } );
+
+  test( "benchmark oneshot nothing", []( auto& expect ) {
+    int x = 0;
+    emptyspace::pnch::oneshot cfg;
+    std::ostringstream os;
+    cfg.run( "nothings but only once", [&]() { x += 1; } ).report_to( os );
+    expect( x, equal_to( 1 ) );
   } );
 } );
 
