@@ -14,7 +14,7 @@ causing excessive compile times once you have more than one assertion.
 
 `pest` includes a `xoshiro` prng and a `zipfian distribution` helper class:
 
-- `#include <pest/xoshiro.hcxx>`
+- `#include <pest/xoshiro.hxx>`
 - `#include <pest/zipfian-distribution.hxx`>
 
 ## requires
@@ -125,19 +125,27 @@ test tests/unit/testscript{testscript}@../pest-clang10/pest/tests/unit/ ../pest-
 declaring `pest` as dependency in a `build2` project:
 
 ```
+TODO
 ```
 
 ## references
 
 similar libraries. might be better suited ...
 
+unit test helpers
+
 - [~martinmoene/lest](https://github.com/martinmoene/lest) ( small-ish, compile-time and binary bloat )
 - [~jimporter/mettle](https://github.com/jimporter/mettle) ( big-ish, compile-time bloat )
 
+benchmark helpers
+
+- [~martinus/nanobench](https://github.com/martinus/nanobench)
+- [~cameron314](https://github.com/cameron314/microbench)
+
 ## mirrors
 
-- darcs @ <https://hub.darcs.net/magenbluten/pest>
-- git @ <https://github.com/stackless-goto/pest>
+- darcs :: <https://hub.darcs.net/magenbluten/pest>
+- git :: <https://github.com/stackless-goto/pest>
 
 ## license
 
