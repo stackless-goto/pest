@@ -76,6 +76,11 @@ emptyspace::pest::suite basic( "pest test suite", []( auto& test ) {
     cfg.run( "nothings but only once", [&]() { x += 1; } ).report_to( os );
     expect( x, equal_to( 1 ) );
   } );
+
+  test( "hexify(std::array<std::byte,N>)", []( auto& expect ) {
+    std::array<std::byte, 2> bytes{ std::byte( 0x23 ), std::byte( 0x42 ) };
+    expect( hexify(bytes), equal_to( "2342" ));
+  } );
 } );
 
 } // namespace

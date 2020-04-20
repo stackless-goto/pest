@@ -4,10 +4,14 @@ $* 2>>EOO == 0
 [suite <pest test suite> | std::vector<>: times7 failing]
 [suite <pest test suite> | std::vector<>: times7 succeeding]
 [suite <pest test suite> | throws out-of-range]
+[suite <pest test suite> | xoshiro with boring seed]
+[suite <pest test suite> | benchmark nothing]
+[suite <pest test suite> | benchmark oneshot nothing]
+[suite <pest test suite> | hexify(std::array<std::byte,N>)]
 [suite <pest test suite> | summary]
   total assertions failed = 0
-  total assertions pass = 6
+  total assertions pass = 10
   total assertions skipped = 0
   total uncaught exceptions = 0
-  total tests = 4
+  total tests = 8
 EOO

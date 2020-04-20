@@ -3,6 +3,7 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <cctype>
 #include <cmath>
 #include <cstddef>
@@ -55,6 +56,26 @@ struct source_location {
 
 namespace emptyspace::pest {
 
+//--hacky-helpers--------------------------------------------------------------
+
+template <typename Iter>
+std::string hexify( Iter begin, Iter const end ) {
+  auto const n = std::distance( begin, end );
+  std::string s( 2u * static_cast<std::size_t>( n ), 'x' );
+  std::string::iterator k = s.begin();
+  while( begin != end ) {
+    auto const x = static_cast<unsigned char>( *begin++ );
+    *k++ = "0123456789abcdef"[x >> 4];
+    *k++ = "0123456789abcdef"[x & 0x0F];
+  }
+  return ( s );
+}
+
+template <std::size_t N>
+std::string hexify( std::array<std::byte, N> const& data, std::size_t const n = N ) {
+  return hexify( data.begin(), data.begin() + std::min( n, N ) );
+}
+
 inline std::ostream& operator<<( std::ostream& os, std::source_location const where ) noexcept {
   auto const s = std::string_view{ where._file };
   auto const n = s.rfind( '/' );
@@ -63,6 +84,8 @@ inline std::ostream& operator<<( std::ostream& os, std::source_location const wh
      << where._line;
   return os;
 }
+
+//--assertion-helpers----------------------------------------------------------
 
 template <typename T>
 struct equal_to {
