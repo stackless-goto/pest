@@ -79,7 +79,12 @@ emptyspace::pest::suite basic( "pest test suite", []( auto& test ) {
 
   test( "hexify(std::array<std::byte,N>)", []( auto& expect ) {
     std::array<std::byte, 2> bytes{ std::byte( 0x23 ), std::byte( 0x42 ) };
-    expect( hexify(bytes), equal_to( "2342" ));
+    expect( hexify( bytes ), equal_to( "2342" ) );
+  } );
+
+  test( "hexify(std::byte[])", []( auto& expect ) {
+    std::byte bytes[2]{ std::byte( 0x23 ), std::byte( 0x42 ) };
+    expect( hexify( bytes ), equal_to( "2342" ) );
   } );
 } );
 

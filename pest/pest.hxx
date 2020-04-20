@@ -76,6 +76,11 @@ std::string hexify( std::array<std::byte, N> const& data, std::size_t const n = 
   return hexify( data.begin(), data.begin() + std::min( n, N ) );
 }
 
+template <std::size_t N>
+std::string hexify( std::byte ( &data )[N], std::size_t const n = N ) {
+  return hexify( data, data + std::min( n, N ) );
+}
+
 inline std::ostream& operator<<( std::ostream& os, std::source_location const where ) noexcept {
   auto const s = std::string_view{ where._file };
   auto const n = s.rfind( '/' );
