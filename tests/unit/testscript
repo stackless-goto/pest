@@ -1,6 +1,7 @@
 : minimal-self-test
 $* 2>>EOO == 0
 [suite <pest test suite> | std::map<>: insert and find key]
+[suite <pest test suite> | snytax sugar for expect( true, equal_to( true ) )]
 [suite <pest test suite> | std::vector<>: times7 failing]
 [suite <pest test suite> | std::vector<>: times7 succeeding]
 [suite <pest test suite> | throws out-of-range]
@@ -8,10 +9,11 @@ $* 2>>EOO == 0
 [suite <pest test suite> | benchmark nothing]
 [suite <pest test suite> | benchmark oneshot nothing]
 [suite <pest test suite> | hexify(std::array<std::byte,N>)]
+[suite <pest test suite> | hexify(std::byte[])]
 [suite <pest test suite> | summary]
   total assertions failed = 0
-  total assertions pass = 10
+  total assertions pass = 13
   total assertions skipped = 0
   total uncaught exceptions = 0
-  total tests = 8
+  total tests = 10
 EOO

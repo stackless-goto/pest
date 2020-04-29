@@ -35,6 +35,11 @@ emptyspace::pest::suite basic( "pest test suite", []( auto& test ) {
     expect( i->second, equal_to( 42u ) );
   } );
 
+  test( "snytax sugar for expect( true, equal_to( true ) )", []( auto& expect ) {
+    expect( true, equal_to( true ) );
+    expect( true );
+  } );
+
   test( "std::vector<>: times7 failing", []( auto& expect ) {
     auto const inputs = std::vector<int>{ 3, 4, 7 };
     // can not include the failing test because output depends

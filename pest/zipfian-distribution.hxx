@@ -13,8 +13,8 @@ in #include <random> by the C++11 standard.
 
 usage example:
 
-  #include <random>
   #include <pest/zipfian_int_distribution.h>
+  #include <random>
 
   int main() {
     std::default_random_engine generator;
@@ -29,8 +29,8 @@ the pre-calculated values and avoid the calculation every time.
 
 usage example:
 
-  #include <random>
   #include <pest/zipfian_int_distribution.h>
+  #include <random>
 
   int main() {
     std::default_random_engine generator;

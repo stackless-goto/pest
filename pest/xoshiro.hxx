@@ -68,8 +68,7 @@ class xoshiro_x4 {
   // they should seed their PRNGs properly.  Only occurs if you
   // seed with zero.
   {
-    for( int i = 0; i < 16; ++i )
-      advance();
+    for( int i = 0; i < 16; ++i ) advance();
   }
 
   void advance() {
@@ -143,8 +142,7 @@ class xoshiro_x8 {
   // they should seed their PRNGs properly.  Only occurs if you
   // seed with zero.
   {
-    for( int i = 0; i < 16; ++i )
-      advance();
+    for( int i = 0; i < 16; ++i ) advance();
   }
 
   void advance() {

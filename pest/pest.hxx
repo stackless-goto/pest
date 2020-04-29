@@ -168,17 +168,17 @@ std::ostream& print_to( std::ostream& os, T const t ) {
   return os;
 }
 
-enum class result_throws { EXPECTED, UNEXPECTED, NOTHROW };
+enum class exception_result { EXPECTED, UNEXPECTED, NOTHROW };
 
 template <typename E, typename F>
-result_throws throws( F const f ) {
+exception_result throws( F const f ) {
   try {
     f();
-    return result_throws::NOTHROW;
+    return exception_result::NOTHROW;
   } catch( E const& ) { //
-    return result_throws::EXPECTED;
+    return exception_result::EXPECTED;
   } catch( ... ) { //
-    return result_throws::UNEXPECTED;
+    return exception_result::UNEXPECTED;
   }
 }
 
@@ -191,26 +191,26 @@ struct test_state {
   unsigned _skipped{ 0 };
 
   void expect(
-      result_throws const rc,
+      exception_result const rc,
       std::source_location const where = std::source_location::current() ) noexcept {
     if( _failed > 0 ) {
       _skipped++;
       return;
     }
     switch( rc ) {
-      case result_throws::NOTHROW:
+      case exception_result::NOTHROW:
         os << "  failed = " << where << std::endl;
         os << "  expected = throws" << std::endl;
         os << "  actual = did not throw" << std::endl;
         _failed++;
         break;
-      case result_throws::UNEXPECTED:
+      case exception_result::UNEXPECTED:
         os << "  failed = " << where << std::endl;
         os << "  expected = throws known exception" << std::endl;
         os << "  actual = threw unexpected exception" << std::endl;
         _failed++;
         break;
-      case result_throws::EXPECTED: _pass++; break;
+      case exception_result::EXPECTED: _pass++; break;
     }
   }
   template <typename T, typename U>
@@ -352,7 +352,12 @@ struct test_state {
   }
 
   inline void operator()(
-      result_throws const rc,
+      bool const true_, std::source_location const where = std::source_location::current() ) noexcept {
+    expect( true_, equal_to( true ), where );
+  }
+
+  inline void operator()(
+      exception_result const rc,
       std::source_location const where = std::source_location::current() ) noexcept {
     expect( rc, where );
   }

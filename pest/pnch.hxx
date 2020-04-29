@@ -314,9 +314,7 @@ struct config {
     _perfc.begin();
     for( std::uint32_t i = 0; i < _outer_loop_cnt; ++i ) {
       auto start = detail::perfc::now();
-      for( std::uint64_t j = 0; j < _inner_loop_cnt; ++j ) {
-        func();
-      }
+      for( std::uint64_t j = 0; j < _inner_loop_cnt; ++j ) { func(); }
       auto end = detail::perfc::now();
       auto delta = std::chrono::duration<double, std::nano>( end - start ).count();
       _results.push_back( delta );
@@ -335,8 +333,7 @@ struct config {
     auto const sep = pre == "" ? "  stats" : "  stats/";
     auto const s = stats();
     double total = .0;
-    for( auto x : _results )
-      total += x;
+    for( auto x : _results ) total += x;
     os << "[benchmark | " << _name << "]" << std::endl;
     os << sep << pre << "/total = " << total << std::endl;
     os << sep << pre << "/average = " << s.avg() << std::endl;
