@@ -1,6 +1,6 @@
 : 1
 name: pest
-version: 1.0.0
+version: 1.0.1-a.0.z
 summary: pest is macro free otherwise simplistic c++17 unit testing
 license: public domain
 description-file: README.md
