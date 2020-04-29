@@ -19,7 +19,9 @@
 
 #if defined( __FreeBSD__ ) || defined( __linux__ )
 #  include <pthread.h>
-#  include <pthread_np.h>
+#  if defined( __FreeBSD__ )
+#    include <pthread_np.h>
+#  endif
 #  include <sys/cpuset.h>
 #  include <sys/resource.h>
 #  include <sys/time.h>
