@@ -125,8 +125,8 @@ struct perfc {
 
   static inline void pin( int cpu = 0x1 ) noexcept {
     cpu_set_t set;
-    CPU_ZERO( set );
-    CPU_SET( cpu, set );
+    CPU_ZERO( &set );
+    CPU_SET( cpu, &set );
     if( auto rc = pthread_setaffinity_np( pthread_self(), sizeof( cpu_set_t ), &set ); rc != 0 ) {
       std::cerr << "pthread_setaffinity_np() failed: error = " << strerror( rc ) << std::endl;
     }
