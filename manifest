@@ -1,7 +1,7 @@
 : 1
 name: pest
-version: 0.1.0-a.0.z
-summary: pest simplistic c++17 unit testing
+version: 1.0.0
+summary: pest is macro free otherwise simplistic c++17 unit testing
 license: public domain
 description-file: README.md
 url: https://hub.darcs.net/magenbluten/pest
