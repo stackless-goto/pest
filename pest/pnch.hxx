@@ -17,12 +17,19 @@
 #include <utility>
 #include <vector>
 
-#if defined( __FreeBSD__ ) || defined( __linux__ )
+#if defined( __FreeBSD__ )
 #  include <pthread.h>
-#  if defined( __FreeBSD__ )
-#    include <pthread_np.h>
-#  endif
+#  include <pthread_np.h>
 #  include <sys/cpuset.h>
+#  include <sys/resource.h>
+#  include <sys/time.h>
+#  include <sys/types.h>
+#elif defined( __linux__ )
+#  if ! defined( _GNU_SOURCE )
+#    define _GNU_SOURCE
+#  endif
+#  include <pthread.h>
+#  include <sched.h>
 #  include <sys/resource.h>
 #  include <sys/time.h>
 #  include <sys/types.h>
@@ -117,8 +124,10 @@ struct perfc {
   }
 
   static inline void pin( int cpu = 0x1 ) noexcept {
-    cpuset_t set = CPUSET_T_INITIALIZER( cpu );
-    if( auto rc = pthread_setaffinity_np( pthread_self(), sizeof( cpuset_t ), &set ); rc != 0 ) {
+    cpu_set_t set;
+    CPU_ZERO( set );
+    CPU_SET( cpu, set );
+    if( auto rc = pthread_setaffinity_np( pthread_self(), sizeof( cpu_set_t ), &set ); rc != 0 ) {
       std::cerr << "pthread_setaffinity_np() failed: error = " << strerror( rc ) << std::endl;
     }
   }
