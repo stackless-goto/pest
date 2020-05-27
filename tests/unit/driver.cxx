@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSE
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 #include <pest/pest.hxx>
 #include <pest/pnch.hxx>

@@ -122,3 +122,6 @@
 \.ninja_log$
 \.ninja_deps$
 \.bdep$
+(^|.*/)build/bootstrap($|/.*)$
+#(^|.*/)test/build/bootstrap/.*$
+version.hxx$
