@@ -224,8 +224,8 @@ benchmark helpers
 
 ## license
 
-choose between `UNLICENSE` or `LICENSE` freely. `zipfian` and `xoshiro` are derived work and
-therefore -- as indicated in the corresponding source files -- `MIT` licensed.
+`zipfian` and `xoshiro` are derived work and therefore -- as indicated in the corresponding source
+files -- `MIT` licensed.
 
 ## support and blame-game
 
