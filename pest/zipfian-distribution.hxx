@@ -59,8 +59,8 @@ class zipfian_int_distribution {
   struct param_type {
     typedef zipfian_int_distribution<_IntType> distribution_type;
 
-    explicit param_type(
-        _IntType __a = 0, _IntType __b = std::numeric_limits<_IntType>::max(), double __theta = 0.99 )
+    explicit param_type( _IntType __a = 0, _IntType __b = std::numeric_limits<_IntType>::max(),
+                         double __theta = 0.99 )
       : _M_a( __a ),
         _M_b( __b ),
         _M_theta( __theta ),
@@ -122,8 +122,8 @@ class zipfian_int_distribution {
    * @param __b [IN]  The upper bound of the distribution.
    * @param __theta [IN]  The skew factor of the distribution.
    */
-  explicit zipfian_int_distribution(
-      _IntType __a = _IntType( 0 ), _IntType __b = _IntType( 1 ), double __theta = 0.99 )
+  explicit zipfian_int_distribution( _IntType __a = _IntType( 0 ), _IntType __b = _IntType( 1 ),
+                                     double __theta = 0.99 )
     : _M_param( __a, __b, __theta ) {}
 
   explicit zipfian_int_distribution( const param_type& __p ) : _M_param( __p ) {}
@@ -176,9 +176,8 @@ class zipfian_int_distribution {
     double eta = ( 1 - std::pow( 2.0 / ( __p.b() - __p.a() + 1 ), 1 - __p.theta() ) ) /
         ( 1 - __p.zeta2theta() / __p.zeta() );
 
-    double u = std::
-        generate_canonical<double, std::numeric_limits<double>::digits, _UniformRandomNumberGenerator>(
-            __urng );
+    double u = std::generate_canonical<double, std::numeric_limits<double>::digits,
+                                       _UniformRandomNumberGenerator>( __urng );
 
     double uz = u * __p.zeta();
     if( uz < 1.0 ) return __p.a();
@@ -192,8 +191,7 @@ class zipfian_int_distribution {
    * @brief Return true if two zipfian int distributions have
    *        the same parameters.
    */
-  friend bool operator==(
-      const zipfian_int_distribution& __d1, const zipfian_int_distribution& __d2 ) {
+  friend bool operator==( const zipfian_int_distribution& __d1, const zipfian_int_distribution& __d2 ) {
     return __d1._M_param == __d2._M_param;
   }
 

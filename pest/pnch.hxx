@@ -174,10 +174,8 @@ struct stats_t {
   double _variance;
 
  public:
-  stats_t(
-      std::vector<double> const& results,
-      std::uint64_t const inner_loop_cnt,
-      double const offset ) noexcept {
+  stats_t( std::vector<double> const& results, std::uint64_t const inner_loop_cnt,
+           double const offset ) noexcept {
     std::vector<double> _results = results;
     std::sort( _results.begin(), _results.end() );
     auto count = _results.size();
@@ -268,8 +266,7 @@ struct stats_t {
 
 template <typename... Args>
 void doNotOptimizeAway( Args&&... args ) {
-  (void)std::initializer_list<int>{
-      ( detail::doNotOptimizeAway( std::forward<Args>( args ) ), 0 )... };
+  (void)std::initializer_list<int>{ ( detail::doNotOptimizeAway( std::forward<Args>( args ) ), 0 )... };
 }
 
 struct config {

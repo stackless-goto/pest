@@ -15,9 +15,8 @@ namespace {
 // example from fluent c++ blog, iirc ( or was it modernes c++? )
 std::vector<int> times7( std::vector<int> const& numbers ) noexcept {
   auto v = std::vector<int>{};
-  std::transform( begin( numbers ), end( numbers ), std::back_inserter( v ), []( int const n ) {
-    return n * 7;
-  } );
+  std::transform( begin( numbers ), end( numbers ), std::back_inserter( v ),
+                  []( int const n ) { return n * 7; } );
   return v;
 }
 

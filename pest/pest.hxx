@@ -32,21 +32,20 @@ struct source_location {
 #  if defined( __has_builtin )
 #    if __has_builtin( __builtin_FILE ) && __has_builtin( __builtin_FUNCTION ) &&                     \
         __has_builtin( __builtin_LINE )
-  static inline source_location current(
-      char const* file = __builtin_FILE(),
-      char const* func = __builtin_FUNCTION(),
-      int const line = __builtin_LINE() ) {
+  static inline source_location current( char const* file = __builtin_FILE(),
+                                         char const* func = __builtin_FUNCTION(),
+                                         int const line = __builtin_LINE() ) {
     return { file, func, line };
   }
 #    else
-  static inline source_location current(
-      char const* file = "unsupported", char const* func = "unsupported", int const line = 0 ) {
+  static inline source_location current( char const* file = "unsupported",
+                                         char const* func = "unsupported", int const line = 0 ) {
     return { file, func, line };
   }
 #    endif
 #  else
-  static inline source_location current(
-      char const* file = "unsupported", char const* func = "unsupported", int const line = 0 ) {
+  static inline source_location current( char const* file = "unsupported",
+                                         char const* func = "unsupported", int const line = 0 ) {
     return { file, func, line };
   }
 #  endif
@@ -133,26 +132,19 @@ bool operator==( T const& lhs, equal_to<U> const& rhs ) {
 
 template <typename T, typename U>
 bool operator==( T const& lhs, equal_to<std::initializer_list<U>> const& rhs ) noexcept {
-  return std::equal(
-      std::begin( lhs ),
-      std::end( lhs ),
-      std::begin( rhs._expr ),
-      std::end( rhs._expr ) );
+  return std::equal( std::begin( lhs ), std::end( lhs ), std::begin( rhs._expr ),
+                     std::end( rhs._expr ) );
 }
 
 template <typename T, typename U>
 bool operator!=( T const& lhs, not_equal_to<std::initializer_list<U>> const& rhs ) noexcept {
-  return not std::equal(
-      std::begin( lhs ),
-      std::end( lhs ),
-      std::begin( rhs._expr ),
-      std::end( rhs._expr ) );
+  return not std::equal( std::begin( lhs ), std::end( lhs ), std::begin( rhs._expr ),
+                         std::end( rhs._expr ) );
 }
 
 inline bool operator!=( double const lhs, not_equal_to<double> const& rhs ) noexcept {
-  return not (
-      std::abs( rhs._expr - lhs ) <=
-      std::abs( std::min( rhs._expr, lhs ) ) * std::numeric_limits<double>::epsilon() );
+  return not ( std::abs( rhs._expr - lhs ) <=
+               std::abs( std::min( rhs._expr, lhs ) ) * std::numeric_limits<double>::epsilon() );
 }
 
 template <typename T, std::enable_if_t<! std::is_enum<T>::value, int> = 0>
@@ -190,9 +182,8 @@ struct test_state {
   unsigned _tests{ 0 };
   unsigned _skipped{ 0 };
 
-  void expect(
-      exception_result const rc,
-      std::source_location const where = std::source_location::current() ) noexcept {
+  void expect( exception_result const rc,
+               std::source_location const where = std::source_location::current() ) noexcept {
     if( _failed > 0 ) {
       _skipped++;
       return;
@@ -214,10 +205,8 @@ struct test_state {
     }
   }
   template <typename T, typename U>
-  void expect(
-      T const& lhs,
-      equal_to<std::initializer_list<U>> const& rhs,
-      std::source_location const where = std::source_location::current() ) noexcept {
+  void expect( T const& lhs, equal_to<std::initializer_list<U>> const& rhs,
+               std::source_location const where = std::source_location::current() ) noexcept {
     // we stop after the first failure, but still count
     // the number of assertions
     if( _failed > 0 ) {
@@ -249,10 +238,8 @@ struct test_state {
   }
 
   template <typename T, typename U>
-  void expect(
-      T const& lhs,
-      equal_to<U> const& rhs,
-      std::source_location const where = std::source_location::current() ) noexcept {
+  void expect( T const& lhs, equal_to<U> const& rhs,
+               std::source_location const where = std::source_location::current() ) noexcept {
     // we stop after the first failure, but still count
     // the number of assertions
     if( _failed > 0 ) {
@@ -279,10 +266,8 @@ struct test_state {
   }
 
   template <typename T, typename U>
-  void expect(
-      T const& lhs,
-      not_equal_to<std::initializer_list<U>> const& rhs,
-      std::source_location const where = std::source_location::current() ) noexcept {
+  void expect( T const& lhs, not_equal_to<std::initializer_list<U>> const& rhs,
+               std::source_location const where = std::source_location::current() ) noexcept {
     // we stop after the first failure, but still count
     // the number of assertions
     if( _failed > 0 ) {
@@ -314,10 +299,8 @@ struct test_state {
   }
 
   template <typename T, typename U>
-  void expect(
-      T const& lhs,
-      not_equal_to<U> const& rhs,
-      std::source_location const where = std::source_location::current() ) noexcept {
+  void expect( T const& lhs, not_equal_to<U> const& rhs,
+               std::source_location const where = std::source_location::current() ) noexcept {
     // we stop after the first failure, but still count
     // the number of assertions
     if( _failed > 0 ) {
@@ -344,10 +327,8 @@ struct test_state {
   }
 
   template <typename T, typename U>
-  inline void operator()(
-      T const& lhs,
-      U const& rhs,
-      std::source_location const where = std::source_location::current() ) noexcept {
+  inline void operator()( T const& lhs, U const& rhs,
+                          std::source_location const where = std::source_location::current() ) noexcept {
     expect( lhs, rhs, where );
   }
 
@@ -356,9 +337,8 @@ struct test_state {
     expect( true_, equal_to( true ), where );
   }
 
-  inline void operator()(
-      exception_result const rc,
-      std::source_location const where = std::source_location::current() ) noexcept {
+  inline void operator()( exception_result const rc,
+                          std::source_location const where = std::source_location::current() ) noexcept {
     expect( rc, where );
   }
 };

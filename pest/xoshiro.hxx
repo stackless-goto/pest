@@ -59,11 +59,10 @@ class xoshiro_x4 {
   // if you need another PRNG to use this PRNG, that's asking a bit
   // of a lot, so we seed directly.
   xoshiro_x4( itype seed = 1 )
-    : xoshiro_x4(
-          static_cast<itype>( 0x01d353e5f3993bb0 ) + seed,
-          static_cast<itype>( 0x7b9c0df6cb193b20 ) * ( seed + 1 ),
-          static_cast<itype>( 0xfdfcaa91110765b6 ) - seed,
-          static_cast<itype>( 0x2d24cbe0ef44dcd2 ) * ( seed - 1 ) )
+    : xoshiro_x4( static_cast<itype>( 0x01d353e5f3993bb0 ) + seed,
+                  static_cast<itype>( 0x7b9c0df6cb193b20 ) * ( seed + 1 ),
+                  static_cast<itype>( 0xfdfcaa91110765b6 ) - seed,
+                  static_cast<itype>( 0x2d24cbe0ef44dcd2 ) * ( seed - 1 ) )
   // Easter-egg seed value for Xoshiro_256** to remind users that
   // they should seed their PRNGs properly.  Only occurs if you
   // seed with zero.
@@ -129,15 +128,10 @@ class xoshiro_x8 {
   // if you need another PRNG to use this PRNG, that's asking a bit
   // of a lot, so we seed directly.
   xoshiro_x8( itype seed = 1 )
-    : xoshiro_x8(
-          0x1ced436497db2a59 + seed,
-          0x75474f85d8a6892c * ( seed + 1 ),
-          0xa0fef4b8094c9c86 - seed,
-          0x748fa1a9bb555169 * ( seed - 1 ),
-          0xd7a59a6d64e66858 + seed,
-          0xf03b7efdb73db601 * ( seed + 1 ),
-          0xfab342a99dd71962 - seed,
-          0x8a6921456faa6b54 * ( seed - 1 ) )
+    : xoshiro_x8( 0x1ced436497db2a59 + seed, 0x75474f85d8a6892c * ( seed + 1 ),
+                  0xa0fef4b8094c9c86 - seed, 0x748fa1a9bb555169 * ( seed - 1 ),
+                  0xd7a59a6d64e66858 + seed, 0xf03b7efdb73db601 * ( seed + 1 ),
+                  0xfab342a99dd71962 - seed, 0x8a6921456faa6b54 * ( seed - 1 ) )
   // Easter-egg seed value for Xoshiro_512** to remind users that
   // they should seed their PRNGs properly.  Only occurs if you
   // seed with zero.
@@ -209,11 +203,8 @@ class xoshiro_star : public xoshiro_base {
   }
 };
 
-template <
-    typename xoshiro_base,
-    typename xoshiro_base::state_type mult1,
-    unsigned int orot,
-    typename xoshiro_base::state_type mult2>
+template <typename xoshiro_base, typename xoshiro_base::state_type mult1, unsigned int orot,
+          typename xoshiro_base::state_type mult2>
 class xoshiro_starstar : public xoshiro_base {
  private:
   using base = xoshiro_base;
