@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+#include <pest/bitmask-distribution.hxx>
 #include <pest/pest.hxx>
 #include <pest/pnch.hxx>
 #include <pest/xoshiro.hxx>
@@ -89,6 +90,45 @@ emptyspace::pest::suite basic( "pest test suite", []( auto& test ) {
   test( "hexify(std::byte[])", []( auto& expect ) {
     std::byte bytes[2]{ std::byte( 0x23 ), std::byte( 0x42 ) };
     expect( hexify( bytes ), equal_to( "2342" ) );
+  } );
+
+  test( "bitmask_distribution<int>{ 0, 23 }", []( auto& expect ) {
+    constexpr auto SHOTS = 42;
+    constexpr auto LO = 0;
+    constexpr auto UP = 23;
+    xoshiro128starstar32 rng{ 0x2323 };
+    emptyspace::bitmask_distribution<int> gen{ LO, UP };
+    for( auto i = 0; i < SHOTS; ++i ) {
+      auto const x = gen( rng );
+      expect( x >= LO );
+      expect( x <= UP );
+    }
+  } );
+
+  test( "bitmask_distribution<int>{ -23, 23 }", []( auto& expect ) {
+    constexpr auto SHOTS = 42;
+    constexpr auto LO = -23;
+    constexpr auto UP = 23;
+    xoshiro128starstar32 rng{ 0x2323 };
+    emptyspace::bitmask_distribution<int> gen{ LO, UP };
+    for( auto i = 0; i < SHOTS; ++i ) {
+      auto const x = gen( rng );
+      expect( x >= LO );
+      expect( x <= UP );
+    }
+  } );
+
+  test( "bitmask_distribution<int>{ -42, -23 }", []( auto& expect ) {
+    constexpr auto SHOTS = 42;
+    constexpr auto LO = -42;
+    constexpr auto UP = -23;
+    xoshiro128starstar32 rng{ 0x2323 };
+    emptyspace::bitmask_distribution<int> gen{ LO, UP };
+    for( auto i = 0; i < SHOTS; ++i ) {
+      auto const x = gen( rng );
+      expect( x >= LO );
+      expect( x <= UP );
+    }
   } );
 } );
 
