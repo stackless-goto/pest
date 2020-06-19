@@ -24,6 +24,12 @@
 #  include <sys/resource.h>
 #  include <sys/time.h>
 #  include <sys/types.h>
+#elif defined( __NetBSD__ )
+#  include <pthread.h>
+#  include <sched.h>
+#  include <sys/resource.h>
+#  include <sys/time.h>
+#  include <sys/types.h>
 #elif defined( __linux__ )
 #  if ! defined( _GNU_SOURCE )
 #    define _GNU_SOURCE
@@ -79,6 +85,57 @@ struct perfc {
     if( auto rc = pthread_setaffinity_np( pthread_self(), sizeof( cpuset_t ), &set ); rc != 0 ) {
       std::cerr << "pthread_setaffinity_np() failed: error=" << strerror( rc ) << std::endl;
     }
+  }
+
+  void report_to( std::ostream& os, std::string_view const name, rusage const& ru ) noexcept {
+    os << "  " << name << "/max resident set size = " << ru.ru_maxrss << std::endl;
+    os << "  " << name << "/minor page faults = " << ru.ru_minflt << std::endl;
+    os << "  " << name << "/major page faults = " << ru.ru_majflt << std::endl;
+  }
+
+  void report_to( std::ostream& os ) noexcept {
+    report_to( os, "begin", _rusage_begin );
+    report_to( os, "end", _rusage_end );
+  }
+};
+#elif defined( __NetBSD__ )
+struct perfc {
+  rusage _rusage_begin;
+  rusage _rusage_end;
+
+  explicit perfc() {
+    std::memset( &_rusage_begin, 0, sizeof( _rusage_begin ) );
+    std::memset( &_rusage_end, 0, sizeof( _rusage_end ) );
+  }
+
+  static inline auto now() noexcept {
+    std::atomic_thread_fence( std::memory_order_seq_cst );
+    auto const t = std::chrono::steady_clock::now();
+    std::atomic_thread_fence( std::memory_order_seq_cst );
+    return t;
+  }
+
+  void begin() noexcept {
+    if( auto const rc = getrusage( RUSAGE_SELF, &_rusage_begin ); rc != 0 ) {
+      std::cerr << "getrusage() failed: error=" << strerror( errno ) << std::endl;
+      std::memset( &_rusage_begin, 0, sizeof( _rusage_begin ) );
+    }
+  }
+
+  void end() noexcept {
+    if( auto rc = getrusage( RUSAGE_SELF, &_rusage_end ); rc != 0 ) {
+      std::cerr << "getrusage() failed: error=" << strerror( errno ) << std::endl;
+      std::memset( &_rusage_end, 0, sizeof( _rusage_begin ) );
+    }
+  }
+
+  static inline void pin( int cpu = 0x1 ) noexcept {
+    auto* set = cpuset_create();
+    cpuset_set( cpu, set );
+    if( auto const rc = pthread_setaffinity_np( pthread_self(), cpuset_size( set ), set ); rc != 0 ) {
+      std::cerr << "pthread_setaffinity_np() failed: error=" << strerror( rc ) << std::endl;
+    }
+    cpuset_destroy( set );
   }
 
   void report_to( std::ostream& os, std::string_view const name, rusage const& ru ) noexcept {

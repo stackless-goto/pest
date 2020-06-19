@@ -10,10 +10,13 @@ $* 2>>EOO == 0
 [suite <pest test suite> | benchmark oneshot nothing]
 [suite <pest test suite> | hexify(std::array<std::byte,N>)]
 [suite <pest test suite> | hexify(std::byte[])]
+[suite <pest test suite> | bitmask_distribution<int>{ 0, 23 }]
+[suite <pest test suite> | bitmask_distribution<int>{ -23, 23 }]
+[suite <pest test suite> | bitmask_distribution<int>{ -42, -23 }]
 [suite <pest test suite> | summary]
   total assertions failed = 0
-  total assertions pass = 13
+  total assertions pass = 265
   total assertions skipped = 0
   total uncaught exceptions = 0
-  total tests = 10
+  total tests = 13
 EOO
