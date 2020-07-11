@@ -47,6 +47,11 @@
 //   - <github.com/cameron314/microbench>
 //   - <github.com/martinus/nanobench>
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpadded"
+#endif
+
 namespace emptyspace::pnch {
 namespace detail {
 #if defined( __FreeBSD__ )
@@ -457,3 +462,7 @@ class oneshot {
 };
 
 } // namespace emptyspace::pnch
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif

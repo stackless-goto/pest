@@ -1,0 +1,28 @@
+WARNINGS += -W
+WARNINGS += -Wall
+WARNINGS += -Wextra
+WARNINGS += -Weverything
+WARNINGS += -pedantic
+WARNINGS += -Wno-c++98-compat
+WARNINGS += -Wno-exit-time-destructors
+WARNINGS += -Wno-global-constructors
+
+CXXFLAGS += -I$(TUP_CWD)
+CXXFLAGS += -std=c++2a
+
+ifeq (@(BUILD_TYPE),default)
+  CXXFLAGS += -Ofast
+  CXXFLAGS += -ffast-math
+  CXXFLAGS += -fomit-frame-pointer
+  CXXFLAGS += -DNDEBUG
+  CXXFLAGS += -march=core-avx2
+  CXXFLAGS += -mtune=generic
+endif
+
+ifeq (@(COMPILER),clang)
+  CXXFLAGS += -stdlib=libc++
+endif
+
+LDFLAGS += -lpthread
+
+!compile_test = |> @(CXX) -x c++ $(WARNINGS) $(CXXFLAGS) %f $(LDFLAGS) -o %o |> %B
