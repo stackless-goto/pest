@@ -21,6 +21,7 @@ endif
 
 ifeq (@(COMPILER),clang)
   CXXFLAGS += -stdlib=libc++
+  LDFLAGS += -fuse-ld=lld
 endif
 
 LDFLAGS += -lpthread
