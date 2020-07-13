@@ -1,3 +1,0 @@
-import libs = pest%lib{pest}
-
-exe{driver}: {hxx ixx txx cxx}{**} $libs testscript

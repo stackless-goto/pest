@@ -1,6 +1,0 @@
-$out_root/
-{
-  include pest/
-}
-
-export $out_root/pest/$import.target
