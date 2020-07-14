@@ -1,3 +1,5 @@
+.gitignore
+
 WARNINGS += -W
 WARNINGS += -Wall
 WARNINGS += -Wextra
