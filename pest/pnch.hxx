@@ -48,8 +48,8 @@
 //   - <github.com/martinus/nanobench>
 
 #ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpadded"
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wpadded"
 #endif
 
 namespace emptyspace::pnch {
@@ -209,22 +209,44 @@ struct perfc {
 #  error unknown platform: do not know how to querying performance counters
 #endif
 
-// see folly's Benchmark.h
+// @see https://github.com/facebook/folly/blob/master/folly/Benchmark.h
+
 template <typename T>
-constexpr bool doNotOptimizeNeedsIndirect() {
+struct DoNotOptimizeAwayNeedsIndirect {
   using Decayed = typename std::decay<T>::type;
-  return ! std::is_trivially_copyable_v<Decayed> || sizeof( Decayed ) > sizeof( long ) ||
-      std::is_pointer<Decayed>::value;
+
+  // First two constraints ensure it can be an "r" operand.
+  // std::is_pointer check is because callers seem to expect that
+  // doNotOptimizeAway(&x) is equivalent to doNotOptimizeAway(x).
+  constexpr static bool value = not std::is_trivially_copyable<Decayed>::value ||
+      sizeof( Decayed ) > sizeof( long ) || std::is_pointer<Decayed>::value;
+};
+
+template <typename T>
+auto doNotOptimizeAway( const T& datum ) ->
+    typename std::enable_if<not DoNotOptimizeAwayNeedsIndirect<T>::value>::type {
+  // The "r" constraint forces the compiler to make datum available
+  // in a register to the asm block, which means that it must have
+  // computed/loaded it.  We use this path for things that are <=
+  // sizeof(long) (they have to fit), trivial (otherwise the compiler
+  // doesn't want to put them in a register), and not a pointer (because
+  // doNotOptimizeAway(&foo) would otherwise be a foot gun that didn't
+  // necessarily compute foo).
+  //
+  // An earlier version of this method had a more permissive input operand
+  // constraint, but that caused unnecessary variation between clang and
+  // gcc benchmarks.
+  asm volatile( "" ::"r"( datum ) );
 }
 
 template <typename T>
-typename std::enable_if<! doNotOptimizeNeedsIndirect<T>()>::type doNotOptimizeAway( T const& val ) {
-  asm volatile( "" ::"r"( val ) );
-}
-
-template <typename T>
-typename std::enable_if<doNotOptimizeNeedsIndirect<T>()>::type doNotOptimizeAway( T const& val ) {
-  asm volatile( "" ::"m"( val ) : "memory" );
+auto doNotOptimizeAway( const T& datum ) ->
+    typename std::enable_if<DoNotOptimizeAwayNeedsIndirect<T>::value>::type {
+  // This version of doNotOptimizeAway tells the compiler that the asm
+  // block will read datum from memory, and that in addition it might read
+  // or write from any memory location.  If the memory clobber could be
+  // separated into input and output that would be preferrable.
+  asm volatile( "" ::"m"( datum ) : "memory" );
 }
 
 struct stats_t {
@@ -464,5 +486,5 @@ class oneshot {
 } // namespace emptyspace::pnch
 
 #ifdef __clang__
-#pragma clang diagnostic pop
+#  pragma clang diagnostic pop
 #endif
