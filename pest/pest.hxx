@@ -18,8 +18,8 @@
 #include <vector>
 
 #ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpadded"
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wpadded"
 #endif
 
 #if __has_include( <source_location> )
@@ -409,5 +409,5 @@ struct suite {
 } // namespace emptyspace::pest
 
 #ifdef __clang__
-#pragma clang diagnostic pop
+#  pragma clang diagnostic pop
 #endif
